@@ -1,0 +1,176 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<section class="stripe-section" style="padding-top: 4rem; padding-bottom: 4rem;">
+  <div class="container" style="max-width: 480px;">
+    <div class="text-center mb-4 animate-fade-in-up">
+      <div style="width: 64px; height: 64px; background: linear-gradient(135deg, var(--kt-primary), var(--kt-accent)); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem;">
+        <i class="bi bi-person-circle" style="font-size: 2rem; color: #fff;"></i>
+      </div>
+      {% if request.user.is_authenticated and request.user.language == 'kk' %}
+        <h1 style="font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; letter-spacing: -0.02em;">Жүйеге кіру</h1>
+        <p style="color: var(--kt-text-light);">Жұмысты жалғастыру үшін логин мен пароль енгізіңіз</p>
+      {% else %}
+        <h1 style="font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; letter-spacing: -0.02em;">Вход в систему</h1>
+        <p style="color: var(--kt-text-light);">Войдите, чтобы продолжить работу</p>
+      {% endif %}
+    </div>
+
+    <div class="stripe-card animate-fade-in-up" style="animation-delay: 0.2s;">
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }} mb-3" role="alert">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+
+      <form method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+          <label for="id_username" class="form-label" style="font-weight: 600; font-size: 0.875rem;">
+            {% if request.user.is_authenticated and request.user.language == 'kk' %}Логин{% else %}Логин{% endif %}
+          </label>
+          <input type="text" name="username" id="id_username" class="form-control" required style="border-radius: 8px; padding: 0.75rem; border: 1px solid var(--kt-border);">
+        </div>
+        <div class="mb-4">
+          <label for="id_password" class="form-label" style="font-weight: 600; font-size: 0.875rem;">
+            {% if request.user.is_authenticated and request.user.language == 'kk' %}Құпиясөз{% else %}Пароль{% endif %}
+          </label>
+          <input type="password" name="password" id="id_password" class="form-control" required style="border-radius: 8px; padding: 0.75rem; border: 1px solid var(--kt-border);">
+        </div>
+        <button type="submit" class="stripe-btn-primary w-100 mb-3">
+          {% if request.user.is_authenticated and request.user.language == 'kk' %}Кіру{% else %}Войти{% endif %}
+        </button>
+      </form>
+
+      <div class="text-center">
+        <p style="color: var(--kt-text-light); font-size: 0.875rem; margin: 0;">
+          {% if request.user.is_authenticated and request.user.language == 'kk' %}
+            Аккаунтыңыз жоқ па? <a href="{% url 'core:register' %}" style="color: var(--kt-accent); text-decoration: none; font-weight: 600;">Тіркелу</a>
+          {% else %}
+            Нет аккаунта? <a href="{% url 'core:register' %}" style="color: var(--kt-accent); text-decoration: none; font-weight: 600;">Зарегистрироваться</a>
+          {% endif %}
+        </p>
+      </div>
+    </div>
+
+    <div class="mt-4 text-center">
+      <p style="color: var(--kt-text-light); font-size: 0.875rem;">
+        <strong>Тестовые аккаунты:</strong><br>
+        admin / admin (администратор)<br>
+        operator / operator (оператор)<br>
+        client / client (клиент)
+      </p>
+    </div>
+  </div>
+</section>
+{% endblock %}
+<div class="row justify-content-center align-items-center" style="min-height: 60vh;">
+  <div class="col-md-10 col-lg-8">
+    <div class="row g-0 card-modern overflow-hidden">
+      <div class="col-lg-6 d-none d-lg-block position-relative" style="background: var(--kt-gradient);">
+        <div class="p-5 text-white h-100 d-flex flex-column justify-content-center">
+          <h2 class="display-6 fw-bold mb-3">
+            <i class="bi bi-robot me-2"></i>
+            AI Help Desk
+          </h2>
+          <p class="lead mb-4">Умная поддержка нового поколения для Казахтелеком</p>
+          <div class="d-flex flex-column gap-3">
+            <div class="d-flex align-items-start gap-3">
+              <i class="bi bi-lightning-charge-fill" style="font-size: 2rem;"></i>
+              <div>
+                <h5 class="fw-bold mb-1">Мгновенные ответы</h5>
+                <p class="mb-0 opacity-90 small">ИИ решает проблемы за секунды</p>
+              </div>
+            </div>
+            <div class="d-flex align-items-start gap-3">
+              <i class="bi bi-shield-check" style="font-size: 2rem;"></i>
+              <div>
+                <h5 class="fw-bold mb-1">Умная диагностика</h5>
+                <p class="mb-0 opacity-90 small">Автоматическая проверка и решение</p>
+              </div>
+            </div>
+            <div class="d-flex align-items-start gap-3">
+              <i class="bi bi-people-fill" style="font-size: 2rem;"></i>
+              <div>
+                <h5 class="fw-bold mb-1">Живые специалисты</h5>
+                <p class="mb-0 opacity-90 small">Сложные вопросы — операторам</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="p-5">
+          <div class="text-center mb-4">
+            {% if request.user.is_authenticated and request.user.language == 'kk' %}
+              <h1 class="h3 fw-bold mb-2">Жүйеге кіру</h1>
+              <p class="text-muted">Логин мен құпиясөзді енгізіңіз</p>
+            {% else %}
+              <h1 class="h3 fw-bold mb-2">Вход в систему</h1>
+              <p class="text-muted">Введите свои учётные данные</p>
+            {% endif %}
+          </div>
+          <form method="post">
+            {% csrf_token %}
+            {% if messages %}
+              {% for message in messages %}
+                <div class="alert alert-danger d-flex align-items-center mb-3">
+                  <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                  <div>{{ message }}</div>
+                </div>
+              {% endfor %}
+            {% endif %}
+            <div class="mb-3">
+              <label class="form-label fw-semibold">
+                <i class="bi bi-person me-1"></i>{% if request.user.is_authenticated and request.user.language == 'kk' %}Логин{% else %}Логин{% endif %}
+              </label>
+              <input 
+                type="text" 
+                name="username" 
+                class="form-control form-control-lg" 
+                placeholder="{% if request.user.is_authenticated and request.user.language == 'kk' %}Логинді енгізіңіз{% else %}Введите логин{% endif %}"
+                required
+                autofocus
+              >
+            </div>
+            <div class="mb-4">
+              <label class="form-label fw-semibold">
+                <i class="bi bi-lock me-1"></i>{% if request.user.is_authenticated and request.user.language == 'kk' %}Құпиясөз{% else %}Пароль{% endif %}
+              </label>
+              <input 
+                type="password" 
+                name="password" 
+                class="form-control form-control-lg" 
+                placeholder="{% if request.user.is_authenticated and request.user.language == 'kk' %}Құпиясөзді енгізіңіз{% else %}Введите пароль{% endif %}"
+                required
+              >
+            </div>
+            <div class="d-grid mb-3">
+              <button type="submit" class="btn btn-gradient btn-lg">
+                <i class="bi bi-box-arrow-in-right me-2"></i>{% if request.user.is_authenticated and request.user.language == 'kk' %}Кіру{% else %}Войти{% endif %}
+              </button>
+            </div>
+            <div class="text-center">
+              <p class="text-muted mb-0">
+                {% if request.user.is_authenticated and request.user.language == 'kk' %}
+                  Аккаунтыңыз жоқ па? 
+                  <a href="{% url 'core:register' %}" class="fw-semibold text-decoration-none" style="color: var(--kt-secondary);">
+                    Тіркелу
+                  </a>
+                {% else %}
+                  Нет аккаунта? 
+                  <a href="{% url 'core:register' %}" class="fw-semibold text-decoration-none" style="color: var(--kt-secondary);">
+                    Зарегистрироваться
+                  </a>
+                {% endif %}
+              </p>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

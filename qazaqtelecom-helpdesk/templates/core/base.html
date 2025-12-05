@@ -1,0 +1,476 @@
+{% load static %}
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AI Help Desk – Казахтелеком</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+      :root {
+        --kt-primary: #00355E;
+        --kt-accent: #00AEEF;
+        --kt-dark: #0a2540;
+        --kt-bg: #ffffff;
+        --kt-surface: #f6f9fc;
+        --kt-border: #e3e8ef;
+        --kt-text: #0a2540;
+        --kt-text-light: #425466;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: linear-gradient(135deg, #f6f9fc 0%, #ffffff 100%);
+        color: var(--kt-text);
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+        overflow-x: hidden;
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+
+      @keyframes slideInLeft {
+        from {
+          opacity: 0;
+          transform: translateX(-30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      @keyframes scaleIn {
+        from {
+          opacity: 0;
+          transform: scale(0.9);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
+      .animate-fade-in-up {
+        animation: fadeInUp 0.6s ease-out forwards;
+      }
+
+      .animate-fade-in {
+        animation: fadeIn 0.8s ease-out forwards;
+      }
+
+      .animate-slide-in-left {
+        animation: slideInLeft 0.6s ease-out forwards;
+      }
+
+      @keyframes pulse {
+        0%, 100% {
+          transform: scale(1);
+          opacity: 0.1;
+        }
+        50% {
+          transform: scale(1.1);
+          opacity: 0.15;
+        }
+      }
+
+      @keyframes float {
+        0%, 100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-20px);
+        }
+      }
+
+      .stripe-header {
+        background: linear-gradient(135deg, #0a2540 0%, #00355E 100%);
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        padding: 1rem 0;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        transition: all 0.3s ease;
+      }
+
+      .stripe-header .container {
+        max-width: 1200px;
+      }
+
+      .stripe-logo {
+        color: #fff;
+        font-weight: 600;
+        font-size: 1.25rem;
+        text-decoration: none;
+        letter-spacing: -0.02em;
+      }
+
+      .stripe-logo:hover {
+        color: #fff;
+      }
+
+      .stripe-nav-link {
+        color: rgba(255,255,255,0.8);
+        text-decoration: none;
+        font-size: 0.9375rem;
+        font-weight: 500;
+        padding: 0.5rem 0.75rem;
+        border-radius: 6px;
+        transition: all 0.2s;
+      }
+
+      .stripe-nav-link:hover {
+        color: #fff;
+        background-color: rgba(255,255,255,0.1);
+      }
+
+      .stripe-lang {
+        background: transparent;
+        border: 1px solid rgba(255,255,255,0.2);
+        color: #fff;
+        font-size: 0.875rem;
+        padding: 0.375rem 0.75rem;
+        border-radius: 6px;
+      }
+
+      .stripe-lang option {
+        color: #000;
+      }
+
+      .stripe-username {
+        color: rgba(255,255,255,0.9);
+        font-size: 0.875rem;
+      }
+
+      .stripe-btn-primary {
+        background: linear-gradient(135deg, #00AEEF 0%, #0099d6 100%);
+        color: #fff;
+        border: none;
+        padding: 0.625rem 1.25rem;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.9375rem;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 2px 8px rgba(0,174,239,0.2);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .stripe-btn-primary::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+        transition: left 0.5s;
+      }
+
+      .stripe-btn-primary:hover::before {
+        left: 100%;
+      }
+
+      .stripe-btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0,174,239,0.4);
+      }
+
+      .stripe-btn-primary:active {
+        transform: translateY(0);
+      }
+
+      .stripe-btn-secondary {
+        background-color: transparent;
+        color: var(--kt-text);
+        border: 1px solid var(--kt-border);
+        padding: 0.625rem 1.25rem;
+        border-radius: 6px;
+        font-weight: 600;
+        font-size: 0.9375rem;
+        transition: all 0.2s;
+      }
+
+      .stripe-btn-secondary:hover {
+        border-color: var(--kt-text-light);
+        background-color: var(--kt-surface);
+      }
+
+      .stripe-card {
+        background: #fff;
+        border: 1px solid var(--kt-border);
+        border-radius: 16px;
+        padding: 2rem;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+      }
+
+      .stripe-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, var(--kt-primary), var(--kt-accent));
+        border-radius: 16px 16px 0 0;
+        opacity: 0;
+        transition: opacity 0.3s;
+      }
+
+      .stripe-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 40px rgba(0,0,0,0.08);
+      }
+
+      .stripe-card:hover::before {
+        opacity: 1;
+      }
+
+      .stripe-section {
+        padding: 5rem 0;
+      }
+
+      .chat-container {
+        max-width: 1000px;
+        margin: 0 auto;
+      }
+
+      .chat-messages {
+        height: 500px;
+        overflow-y: auto;
+        padding: 1.5rem;
+        background-color: #fff;
+        border-radius: 12px;
+        border: 1px solid var(--kt-border);
+      }
+
+      .msg-bubble {
+        border-radius: 16px;
+        padding: 0.875rem 1.125rem;
+        margin-bottom: 0.75rem;
+        font-size: 0.9375rem;
+        max-width: 70%;
+        line-height: 1.5;
+        animation: fadeInUp 0.3s ease-out;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        transition: all 0.2s;
+      }
+
+      .msg-bubble:hover {
+        transform: translateX(4px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      }
+
+      .msg-bot {
+        background-color: var(--kt-surface);
+        color: var(--kt-text);
+      }
+
+      .msg-user {
+        background-color: var(--kt-primary);
+        color: #fff;
+        margin-left: auto;
+      }
+
+      .speed-value {
+        font-size: 3rem;
+        font-weight: 700;
+        color: var(--kt-primary);
+        letter-spacing: -0.02em;
+      }
+
+      .speed-label {
+        font-size: 1rem;
+        color: var(--kt-text-light);
+        font-weight: 500;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="stripe-header">
+      <div class="container">
+        <div class="d-flex align-items-center justify-content-between">
+          <a class="stripe-logo" href="{% url 'core:index' %}">
+            AI Help Desk
+          </a>
+
+          <div class="d-flex align-items-center gap-3">
+            {% if request.user.is_authenticated %}
+              <div class="d-none d-md-flex align-items-center gap-1">
+                {% if request.user.is_staff or request.user.role == 'operator' %}
+                  <a href="{% url 'tickets:operator_ticket_list' %}" class="stripe-nav-link">
+                    {% if request.user.language == 'kk' %}
+                      Оператор панелі
+                    {% else %}
+                      Панель оператора
+                    {% endif %}
+                  </a>
+                {% endif %}
+                {% if request.user.is_superuser %}
+                  <a href="{% url 'tickets:dashboard' %}" class="stripe-nav-link">
+                    {% if request.user.language == 'kk' %}
+                      Дашборд
+                    {% else %}
+                      Дашборд
+                    {% endif %}
+                  </a>
+                {% endif %}
+              </div>
+
+              <form action="{% url 'core:set_language' %}" method="post" class="d-flex align-items-center">
+                {% csrf_token %}
+                <select name="language" class="form-select form-select-sm stripe-lang" onchange="this.form.submit()">
+                  <option value="ru" {% if request.user.language == 'ru' %}selected{% endif %}>RU</option>
+                  <option value="kk" {% if request.user.language == 'kk' %}selected{% endif %}>KZ</option>
+                </select>
+              </form>
+              <span class="stripe-username">
+                {{ request.user.full_name|default:request.user.username }}
+              </span>
+              <a href="{% url 'core:logout' %}" class="stripe-nav-link">
+                {% if request.user.language == 'kk' %}
+                  Шығу
+                {% else %}
+                  Выход
+                {% endif %}
+              </a>
+            {% else %}
+              <a href="{% url 'core:login' %}" class="stripe-nav-link">
+                {% if request.user.is_authenticated and request.user.language == 'kk' %}
+                  Кіру
+                {% else %}
+                  Вход
+                {% endif %}
+              </a>
+              <a href="{% url 'core:register' %}" class="btn btn-sm btn-outline-light">
+                {% if request.user.is_authenticated and request.user.language == 'kk' %}
+                  Тіркелу
+                {% else %}
+                  Регистрация
+                {% endif %}
+              </a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer style="background: linear-gradient(135deg, #0a2540 0%, #00355E 100%); color: #fff; padding: 3rem 0 1.5rem; margin-top: 5rem;">
+      <div class="container" style="max-width: 1200px;">
+        <div class="row g-4 mb-4">
+          <div class="col-md-4">
+            <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem;">AI Help Desk</h3>
+            <p style="color: rgba(255,255,255,0.7); font-size: 0.9375rem; margin-bottom: 1.5rem;">
+              {% if request.user.is_authenticated and request.user.language == 'kk' %}
+                Қазақтелеком клиенттеріне арналған AI-негізделген қолдау жүйесі
+              {% else %}
+                Интеллектуальная система поддержки клиентов Казахтелеком с автоматической обработкой обращений
+              {% endif %}
+            </p>
+            <div class="d-flex gap-3">
+              <a href="#" style="width: 36px; height: 36px; background: rgba(255,255,255,0.1); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #fff; text-decoration: none; transition: all 0.3s;">
+                <i class="bi bi-facebook"></i>
+              </a>
+              <a href="#" style="width: 36px; height: 36px; background: rgba(255,255,255,0.1); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #fff; text-decoration: none; transition: all 0.3s;">
+                <i class="bi bi-instagram"></i>
+              </a>
+              <a href="#" style="width: 36px; height: 36px; background: rgba(255,255,255,0.1); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #fff; text-decoration: none; transition: all 0.3s;">
+                <i class="bi bi-telegram"></i>
+              </a>
+            </div>
+          </div>
+          <div class="col-md-2">
+            <h4 style="font-size: 0.875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1rem; color: rgba(255,255,255,0.6);">
+              {% if request.user.is_authenticated and request.user.language == 'kk' %}
+                Өнім
+              {% else %}
+                Продукт
+              {% endif %}
+            </h4>
+            <ul style="list-style: none; padding: 0; margin: 0;">
+              <li style="margin-bottom: 0.5rem;"><a href="{% url 'core:index' %}" style="color: rgba(255,255,255,0.8); text-decoration: none; font-size: 0.9375rem; transition: color 0.2s;">{% if request.user.is_authenticated and request.user.language == 'kk' %}Басты бет{% else %}Главная{% endif %}</a></li>
+              <li style="margin-bottom: 0.5rem;"><a href="{% url 'core:chat' %}" style="color: rgba(255,255,255,0.8); text-decoration: none; font-size: 0.9375rem; transition: color 0.2s;">{% if request.user.is_authenticated and request.user.language == 'kk' %}Чат{% else %}Чат{% endif %}</a></li>
+              <li style="margin-bottom: 0.5rem;"><a href="#" style="color: rgba(255,255,255,0.8); text-decoration: none; font-size: 0.9375rem; transition: color 0.2s;">{% if request.user.is_authenticated and request.user.language == 'kk' %}Құжаттама{% else %}Документация{% endif %}</a></li>
+            </ul>
+          </div>
+          <div class="col-md-3">
+            <h4 style="font-size: 0.875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1rem; color: rgba(255,255,255,0.6);">
+              {% if request.user.is_authenticated and request.user.language == 'kk' %}
+                Қолдау
+              {% else %}
+                Поддержка
+              {% endif %}
+            </h4>
+            <ul style="list-style: none; padding: 0; margin: 0;">
+              <li style="margin-bottom: 0.5rem;"><a href="#" style="color: rgba(255,255,255,0.8); text-decoration: none; font-size: 0.9375rem; transition: color 0.2s;">{% if request.user.is_authenticated and request.user.language == 'kk' %}Анықтама орталығы{% else %}Справочный центр{% endif %}</a></li>
+              <li style="margin-bottom: 0.5rem;"><a href="#" style="color: rgba(255,255,255,0.8); text-decoration: none; font-size: 0.9375rem; transition: color 0.2s;">{% if request.user.is_authenticated and request.user.language == 'kk' %}Байланыс{% else %}Контакты{% endif %}</a></li>
+              <li style="margin-bottom: 0.5rem;"><a href="#" style="color: rgba(255,255,255,0.8); text-decoration: none; font-size: 0.9375rem; transition: color 0.2s;">{% if request.user.is_authenticated and request.user.language == 'kk' %}Жүйе статусы{% else %}Статус системы{% endif %}</a></li>
+            </ul>
+          </div>
+          <div class="col-md-3">
+            <h4 style="font-size: 0.875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1rem; color: rgba(255,255,255,0.6);">
+              {% if request.user.is_authenticated and request.user.language == 'kk' %}
+                Контакттар
+              {% else %}
+                Контакты
+              {% endif %}
+            </h4>
+            <p style="color: rgba(255,255,255,0.8); font-size: 0.9375rem; margin-bottom: 0.5rem;">
+              <i class="bi bi-telephone me-2"></i>123
+            </p>
+            <p style="color: rgba(255,255,255,0.8); font-size: 0.9375rem; margin-bottom: 0.5rem;">
+              <i class="bi bi-envelope me-2"></i>support@telecom.kz
+            </p>
+          </div>
+        </div>
+        <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem; text-align: center;">
+          <p style="color: rgba(255,255,255,0.6); font-size: 0.875rem; margin: 0;">
+            {% if request.user.is_authenticated and request.user.language == 'kk' %}
+              © 2025 Қазақтелеком. AI Help Desk - демонстрациялық жоба
+            {% else %}
+              © 2025 Казахтелеком. AI Help Desk - Demo Project
+            {% endif %}
+          </p>
+        </div>
+      </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'js/speedtest.js' %}"></script>
+    <script src="{% static 'js/chat.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+  </body>
+</html>

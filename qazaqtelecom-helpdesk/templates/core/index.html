@@ -1,0 +1,354 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<!-- Hero Section -->
+<section style="background: linear-gradient(135deg, #0a2540 0%, #00355E 100%); color: #fff; padding: 6rem 0 8rem; position: relative; overflow: hidden;">
+  <!-- Animated background particles -->
+  <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0.1; pointer-events: none;">
+    <div style="position: absolute; width: 300px; height: 300px; background: radial-gradient(circle, #00AEEF 0%, transparent 70%); top: -150px; right: -150px; animation: pulse 4s ease-in-out infinite;"></div>
+    <div style="position: absolute; width: 200px; height: 200px; background: radial-gradient(circle, #00AEEF 0%, transparent 70%); bottom: -100px; left: -100px; animation: pulse 6s ease-in-out infinite;"></div>
+  </div>
+  <div class="container" style="max-width: 1200px; position: relative; z-index: 1;">
+    <div class="row align-items-center">
+      <div class="col-lg-6 mb-5 mb-lg-0 animate-slide-in-left">
+        <div class="badge bg-light bg-opacity-10 text-white mb-3" style="padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.875rem; font-weight: 500;">
+          AI Help Desk / Demo
+        </div>
+        {% if request.user.is_authenticated and request.user.language == 'kk' %}
+          <h1 style="font-size: 3.5rem; font-weight: 700; line-height: 1.1; margin-bottom: 1.5rem; letter-spacing: -0.02em;">
+            Қазақтелеком клиенттеріне арналған бірыңғай қолдау терезесі
+          </h1>
+          <p style="font-size: 1.25rem; color: rgba(255,255,255,0.8); margin-bottom: 2rem; max-width: 540px;">
+            AI-көмекші типтік сұрақтарды автоматты түрде шешіп, күрделі өтінімдерді операторларға бағыттайды
+          </p>
+        {% else %}
+          <h1 style="font-size: 3.5rem; font-weight: 700; line-height: 1.1; margin-bottom: 1.5rem; letter-spacing: -0.02em;">
+            Единое окно поддержки Казахтелеком
+          </h1>
+          <p style="font-size: 1.25rem; color: rgba(255,255,255,0.8); margin-bottom: 2rem; max-width: 540px;">
+            AI-ассистент автоматически решает типовые вопросы клиентов и передаёт сложные обращения операторам
+          </p>
+        {% endif %}
+        <div class="d-flex flex-wrap gap-3">
+          <a href="{% url 'core:chat' %}" class="stripe-btn-primary" style="display: inline-block; text-decoration: none;">
+            {% if request.user.is_authenticated and request.user.language == 'kk' %}
+              Чатты бастау
+            {% else %}
+              Начать чат
+            {% endif %}
+          </a>
+          <button type="button" class="stripe-btn-secondary" style="background-color: rgba(255,255,255,0.1); color: #fff; border-color: rgba(255,255,255,0.2);" onclick="document.getElementById('speedtest-section').scrollIntoView({behavior: 'smooth'})">
+            {% if request.user.is_authenticated and request.user.language == 'kk' %}
+              Жылдамдықты тексеру
+            {% else %}
+              Проверка скорости
+            {% endif %}
+          </button>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="stripe-card animate-fade-in-up" style="background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.1); backdrop-filter: blur(10px); animation-delay: 0.2s;">
+          <h3 style="font-size: 1.125rem; font-weight: 600; margin-bottom: 1.5rem; color: #fff;">
+            {% if request.user.is_authenticated and request.user.language == 'kk' %}
+              Онлайн-диагностика
+            {% else %}
+              Онлайн-диагностика
+            {% endif %}
+          </h3>
+          <div class="text-center mb-3">
+            <div class="speed-value" id="speed-value-hero" style="color: var(--kt-accent);">0</div>
+            <div class="speed-label" style="color: rgba(255,255,255,0.7);">Mbps</div>
+          </div>
+          <button class="btn w-100" id="btn-speedtest-hero" style="background-color: var(--kt-accent); color: #fff; border: none; padding: 0.75rem; border-radius: 8px; font-weight: 600;">
+            Запустить тест
+          </button>
+          <div class="mt-3 small" id="speedtest-status-hero" style="display:none; color: rgba(255,255,255,0.7); text-align: center;">
+            <span id="speedtest-status-text-hero">Готов к запуску</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Features Section -->
+<section class="stripe-section" style="background-color: var(--kt-surface);">
+  <div class="container" style="max-width: 1200px;">
+    <div class="text-center mb-5 animate-fade-in-up">
+      {% if request.user.is_authenticated and request.user.language == 'kk' %}
+        <h2 style="font-size: 2.5rem; font-weight: 700; margin-bottom: 1rem; letter-spacing: -0.02em;">Жүйенің мүмкіндіктері</h2>
+        <p style="font-size: 1.125rem; color: var(--kt-text-light); max-width: 640px; margin: 0 auto;">
+          Клиент өтінімін бірінші байланыстан бастап толық шешімге дейін өңдеу циклі
+        </p>
+      {% else %}
+        <h2 style="font-size: 2.5rem; font-weight: 700; margin-bottom: 1rem; letter-spacing: -0.02em;">Что умеет система</h2>
+        <p style="font-size: 1.125rem; color: var(--kt-text-light); max-width: 640px; margin: 0 auto;">
+          Полный цикл обработки обращений от первого контакта до решения проблемы
+        </p>
+      {% endif %}
+    </div>
+    <div class="row g-4">
+      <div class="col-md-6 col-lg-3">
+        <div class="stripe-card h-100 animate-fade-in-up" style="animation-delay: 0.1s;">
+          <div style="width: 48px; height: 48px; background: linear-gradient(135deg, rgba(0,174,239,0.1) 0%, rgba(0,174,239,0.2) 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem; transition: all 0.3s;">
+            <i class="bi bi-chat-dots" style="font-size: 1.5rem; color: var(--kt-accent); transition: transform 0.3s;"></i>
+          </div>
+          <h3 style="font-size: 1.125rem; font-weight: 600; margin-bottom: 0.75rem;">
+            {% if request.user.is_authenticated and request.user.language == 'kk' %}
+              Авто-классификация
+            {% else %}
+              Авто-классификация
+            {% endif %}
+          </h3>
+          <p style="color: var(--kt-text-light); font-size: 0.9375rem; margin: 0;">
+            {% if request.user.is_authenticated and request.user.language == 'kk' %}
+              AI әр өтінім үшін санатты, басымдықты және бөлімді автоматты түрде анықтайды
+            {% else %}
+              AI определяет категорию, приоритет и отдел для каждого обращения
+            {% endif %}
+          </p>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3">
+        <div class="stripe-card h-100 animate-fade-in-up" style="animation-delay: 0.2s;">
+          <div style="width: 48px; height: 48px; background: linear-gradient(135deg, rgba(0,174,239,0.1) 0%, rgba(0,174,239,0.2) 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
+            <i class="bi bi-lightning" style="font-size: 1.5rem; color: var(--kt-accent);"></i>
+          </div>
+          <h3 style="font-size: 1.125rem; font-weight: 600; margin-bottom: 0.75rem;">
+            {% if request.user.is_authenticated and request.user.language == 'kk' %}
+              Лездік жауаптар
+            {% else %}
+              Мгновенные ответы
+            {% endif %}
+          </h3>
+          <p style="color: var(--kt-text-light); font-size: 0.9375rem; margin: 0;">
+            {% if request.user.is_authenticated and request.user.language == 'kk' %}
+              Типтік сұрақтар бірнеше секунд ішінде автоматты түрде шешіледі
+            {% else %}
+              Типовые вопросы решаются автоматически за секунды
+            {% endif %}
+          </p>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3">
+        <div class="stripe-card h-100 animate-fade-in-up" style="animation-delay: 0.3s;">
+          <div style="width: 48px; height: 48px; background: linear-gradient(135deg, rgba(0,174,239,0.1) 0%, rgba(0,174,239,0.2) 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
+            <i class="bi bi-people" style="font-size: 1.5rem; color: var(--kt-accent);"></i>
+          </div>
+          <h3 style="font-size: 1.125rem; font-weight: 600; margin-bottom: 0.75rem;">
+            {% if request.user.is_authenticated and request.user.language == 'kk' %}
+              Операторға беру
+            {% else %}
+              Передача оператору
+            {% endif %}
+          </h3>
+          <p style="color: var(--kt-text-light); font-size: 0.9375rem; margin: 0;">
+            {% if request.user.is_authenticated and request.user.language == 'kk' %}
+              Күрделі өтінімдер автоматты түрде тиісті мамандарға жіберіледі
+            {% else %}
+              Сложные обращения автоматически попадают к специалистам
+            {% endif %}
+          </p>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3">
+        <div class="stripe-card h-100 animate-fade-in-up" style="animation-delay: 0.4s;">
+          <div style="width: 48px; height: 48px; background: linear-gradient(135deg, rgba(0,174,239,0.1) 0%, rgba(0,174,239,0.2) 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
+            <i class="bi bi-graph-up" style="font-size: 1.5rem; color: var(--kt-accent);"></i>
+          </div>
+          <h3 style="font-size: 1.125rem; font-weight: 600; margin-bottom: 0.75rem;">
+            {% if request.user.is_authenticated and request.user.language == 'kk' %}
+              Аналитика
+            {% else %}
+              Аналитика
+            {% endif %}
+          </h3>
+          <p style="color: var(--kt-text-light); font-size: 0.9375rem; margin: 0;">
+            {% if request.user.is_authenticated and request.user.language == 'kk' %}
+              Қызмет сапасы мен автоматтандыру көрсеткіштері бар дашборд
+            {% else %}
+              Дашборд с метриками качества обслуживания и автоматизации
+            {% endif %}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Speedtest Section -->
+<section class="stripe-section" id="speedtest-section">
+  <div class="container" style="max-width: 1200px;">
+    <div class="row align-items-center">
+      <div class="col-lg-6 mb-4 mb-lg-0">
+        {% if request.user.is_authenticated and request.user.language == 'kk' %}
+          <h2 style="font-size: 2.5rem; font-weight: 700; margin-bottom: 1rem; letter-spacing: -0.02em;">Интернет жылдамдығын тексеру</h2>
+          <p style="font-size: 1.125rem; color: var(--kt-text-light); margin-bottom: 2rem;">
+            Қосылу сапасын жылдам диагностика. Жылдамдық қалыптан төмен болса, жүйе автоматты түрде қолдау чатын ұсынды.
+          </p>
+          <button class="stripe-btn-primary" id="btn-speedtest">
+            Жылдамдықты тексеру
+          </button>
+        {% else %}
+          <h2 style="font-size: 2.5rem; font-weight: 700; margin-bottom: 1rem; letter-spacing: -0.02em;">Проверка скорости интернета</h2>
+          <p style="font-size: 1.125rem; color: var(--kt-text-light); margin-bottom: 2rem;">
+            Быстрая диагностика качества подключения. Если скорость ниже нормы, система автоматически предложит открыть чат с поддержкой.
+          </p>
+          <button class="stripe-btn-primary" id="btn-speedtest">
+            Запустить тест скорости
+          </button>
+        {% endif %}
+        <div class="mt-3" id="speedtest-status" style="display:none; color: var(--kt-text-light);">
+          <span id="speedtest-status-text">
+            {% if request.user.is_authenticated and request.user.language == 'kk' %}
+              Бастауға дайын
+            {% else %}
+              Готов к запуску
+            {% endif %}
+          </span>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="stripe-card text-center">
+          <div class="speed-value" id="speed-value">0</div>
+          <div class="speed-label">Mbps</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Stats Section -->
+<section class="stripe-section" style="background: linear-gradient(135deg, var(--kt-primary) 0%, var(--kt-dark) 100%); color: #fff;">
+  <div class="container" style="max-width: 1200px;">
+    <div class="text-center mb-5 animate-fade-in-up">
+      {% if request.user.is_authenticated and request.user.language == 'kk' %}
+        <h2 style="font-size: 2.5rem; font-weight: 700; margin-bottom: 1rem; letter-spacing: -0.02em;">Нәтижелер сандармен</h2>
+        <p style="font-size: 1.125rem; color: rgba(255,255,255,0.8); max-width: 640px; margin: 0 auto;">
+          AI-көмекшінің нақты жағдайлардағы тиімділігі
+        </p>
+      {% else %}
+        <h2 style="font-size: 2.5rem; font-weight: 700; margin-bottom: 1rem; letter-spacing: -0.02em;">Результаты в цифрах</h2>
+        <p style="font-size: 1.125rem; color: rgba(255,255,255,0.8); max-width: 640px; margin: 0 auto;">
+          Эффективность AI-помощника в реальных условиях
+        </p>
+      {% endif %}
+    </div>
+    <div class="row g-4 text-center">
+      <div class="col-md-3">
+        <div class="animate-fade-in-up" style="animation-delay: 0.1s;">
+          <div style="font-size: 3.5rem; font-weight: 700; margin-bottom: 0.5rem; background: linear-gradient(135deg, #00AEEF, #fff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">60%</div>
+          <div style="font-size: 1rem; color: rgba(255,255,255,0.8); font-weight: 500;">
+            {% if request.user.is_authenticated and request.user.language == 'kk' %}
+              Автоматты шешім
+            {% else %}
+              Автоматическое решение
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="animate-fade-in-up" style="animation-delay: 0.2s;">
+          <div style="font-size: 3.5rem; font-weight: 700; margin-bottom: 0.5rem; background: linear-gradient(135deg, #00AEEF, #fff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">&lt;5с</div>
+          <div style="font-size: 1rem; color: rgba(255,255,255,0.8); font-weight: 500;">
+            {% if request.user.is_authenticated and request.user.language == 'kk' %}
+              Бірінші жауап беру уақыты
+            {% else %}
+              Время первого ответа
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="animate-fade-in-up" style="animation-delay: 0.3s;">
+          <div style="font-size: 3.5rem; font-weight: 700; margin-bottom: 0.5rem; background: linear-gradient(135deg, #00AEEF, #fff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">24/7</div>
+          <div style="font-size: 1rem; color: rgba(255,255,255,0.8); font-weight: 500;">
+            {% if request.user.is_authenticated and request.user.language == 'kk' %}
+              Қолжетімділік
+            {% else %}
+              Доступность
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="animate-fade-in-up" style="animation-delay: 0.4s;">
+          <div style="font-size: 3.5rem; font-weight: 700; margin-bottom: 0.5rem; background: linear-gradient(135deg, #00AEEF, #fff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">95%</div>
+          <div style="font-size: 1rem; color: rgba(255,255,255,0.8); font-weight: 500;">
+            {% if request.user.is_authenticated and request.user.language == 'kk' %}
+              Қанағаттанушылық
+            {% else %}
+              Удовлетворённость
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section class="stripe-section" style="background-color: var(--kt-surface);">
+  <div class="container text-center" style="max-width: 800px;">
+    <div class="animate-fade-in-up">
+      {% if request.user.is_authenticated and request.user.language == 'kk' %}
+        <h2 style="font-size: 2.5rem; font-weight: 700; margin-bottom: 1rem; letter-spacing: -0.02em;">Қолданып көруге дайынсыз ба?</h2>
+        <p style="font-size: 1.125rem; color: var(--kt-text-light); margin-bottom: 2rem;">
+          Чатты ашып, кез келген сұрақ қойыңыз — AI-көмекші бірден жауап береді
+        </p>
+      {% else %}
+        <h2 style="font-size: 2.5rem; font-weight: 700; margin-bottom: 1rem; letter-spacing: -0.02em;">Готовы попробовать?</h2>
+        <p style="font-size: 1.125rem; color: var(--kt-text-light); margin-bottom: 2rem;">
+          Откройте чат и задайте любой вопрос — AI-ассистент ответит мгновенно
+        </p>
+      {% endif %}
+      <a href="{% url 'core:chat' %}" class="stripe-btn-primary" style="display: inline-block; text-decoration: none; font-size: 1.125rem; padding: 0.875rem 2rem;">
+        {% if request.user.is_authenticated and request.user.language == 'kk' %}
+          Қолдау чаттарын ашу
+        {% else %}
+          Открыть чат с поддержкой
+        {% endif %}
+        <i class="bi bi-arrow-right ms-2"></i>
+      </a>
+    </div>
+  </div>
+</section>
+
+<div class="modal fade" id="lowSpeedModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow-lg" style="border-radius: 16px; overflow: hidden;">
+      <div style="background: linear-gradient(135deg, #fff3cd 0%, #ffc107 100%); padding: 1.5rem; text-align: center;">
+        <div style="width: 64px; height: 64px; background: rgba(255,255,255,0.9); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem;">
+          <i class="bi bi-exclamation-triangle-fill" style="font-size: 2rem; color: #ffc107;"></i>
+        </div>
+        <h5 class="fw-bold mb-0" style="color: #856404;">Низкая скорость интернета</h5>
+      </div>
+      <div class="modal-body" style="padding: 2rem;">
+        <p class="mb-3" style="font-size: 1rem; color: var(--kt-text);">
+          Обнаружена скорость ниже 5 Mbps. AI-помощник может помочь диагностировать и решить проблему.
+        </p>
+        <div style="background: var(--kt-surface); border-left: 3px solid var(--kt-accent); padding: 1rem; border-radius: 8px;">
+          <div style="display: flex; align-items: start; gap: 0.75rem;">
+            <i class="bi bi-lightbulb-fill" style="font-size: 1.25rem; color: var(--kt-accent); flex-shrink: 0;"></i>
+            <div>
+              <strong style="color: var(--kt-text);">Рекомендации:</strong>
+              <ul style="margin: 0.5rem 0 0 0; padding-left: 1.25rem; color: var(--kt-text-light);">
+                <li>Перезагрузите роутер</li>
+                <li>Проверьте подключение кабеля</li>
+                <li>Обратитесь к AI-помощнику</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer border-0" style="padding: 1.5rem 2rem;">
+        <button type="button" class="stripe-btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+        <a href="{% url 'core:chat' %}" class="stripe-btn-primary" style="text-decoration: none;">
+          Открыть чат
+          <i class="bi bi-arrow-right ms-1"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,247 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<section class="stripe-section" style="padding-top: 4rem; padding-bottom: 4rem;">
+  <div class="container" style="max-width: 480px;">
+    <div class="text-center mb-4 animate-fade-in-up">
+      <div style="width: 64px; height: 64px; background: linear-gradient(135deg, var(--kt-primary), var(--kt-accent)); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem;">
+        <i class="bi bi-person-plus" style="font-size: 2rem; color: #fff;"></i>
+      </div>
+      {% if request.user.is_authenticated and request.user.language == 'kk' %}
+        <h1 style="font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; letter-spacing: -0.02em;">Тіркелу</h1>
+        <p style="color: var(--kt-text-light);">Жүйеге кіру үшін жаңа аккаунт жасаңыз</p>
+      {% else %}
+        <h1 style="font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; letter-spacing: -0.02em;">Регистрация</h1>
+        <p style="color: var(--kt-text-light);">Создайте аккаунт для доступа к системе</p>
+      {% endif %}
+    </div>
+
+    <div class="stripe-card animate-fade-in-up" style="animation-delay: 0.2s;">
+      {% if form.errors %}
+        <div class="alert alert-danger mb-3" role="alert">
+          Пожалуйста, исправьте ошибки в форме
+        </div>
+      {% endif %}
+
+      <form method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+          <label for="{{ form.username.id_for_label }}" class="form-label" style="font-weight: 600; font-size: 0.875rem;">
+            {% if request.user.is_authenticated and request.user.language == 'kk' %}Логин{% else %}Логин{% endif %}
+          </label>
+          {{ form.username }}
+          {% if form.username.errors %}
+            <div class="text-danger small mt-1">{{ form.username.errors.0 }}</div>
+          {% endif %}
+        </div>
+        <div class="mb-3">
+          <label for="{{ form.full_name.id_for_label }}" class="form-label" style="font-weight: 600; font-size: 0.875rem;">
+            {% if request.user.is_authenticated and request.user.language == 'kk' %}Аты-жөні{% else %}ФИО{% endif %}
+          </label>
+          {{ form.full_name }}
+          {% if form.full_name.errors %}
+            <div class="text-danger small mt-1">{{ form.full_name.errors.0 }}</div>
+          {% endif %}
+        </div>
+        <div class="mb-3">
+          <label for="{{ form.phone.id_for_label }}" class="form-label" style="font-weight: 600; font-size: 0.875rem;">
+            {% if request.user.is_authenticated and request.user.language == 'kk' %}Телефон{% else %}Телефон{% endif %}
+          </label>
+          {{ form.phone }}
+          {% if form.phone.errors %}
+            <div class="text-danger small mt-1">{{ form.phone.errors.0 }}</div>
+          {% endif %}
+        </div>
+        <div class="mb-3">
+          <label for="{{ form.language.id_for_label }}" class="form-label" style="font-weight: 600; font-size: 0.875rem;">
+            {% if request.user.is_authenticated and request.user.language == 'kk' %}Тіл{% else %}Язык{% endif %}
+          </label>
+          {{ form.language }}
+          {% if form.language.errors %}
+            <div class="text-danger small mt-1">{{ form.language.errors.0 }}</div>
+          {% endif %}
+        </div>
+        <div class="mb-3">
+          <label for="{{ form.password1.id_for_label }}" class="form-label" style="font-weight: 600; font-size: 0.875rem;">
+            {% if request.user.is_authenticated and request.user.language == 'kk' %}Құпиясөз{% else %}Пароль{% endif %}
+          </label>
+          {{ form.password1 }}
+          {% if form.password1.errors %}
+            <div class="text-danger small mt-1">{{ form.password1.errors.0 }}</div>
+          {% endif %}
+        </div>
+        <div class="mb-4">
+          <label for="{{ form.password2.id_for_label }}" class="form-label" style="font-weight: 600; font-size: 0.875rem;">
+            {% if request.user.is_authenticated and request.user.language == 'kk' %}Құпиясөзді растау{% else %}Подтверждение пароля{% endif %}
+          </label>
+          {{ form.password2 }}
+          {% if form.password2.errors %}
+            <div class="text-danger small mt-1">{{ form.password2.errors.0 }}</div>
+          {% endif %}
+        </div>
+        <button type="submit" class="stripe-btn-primary w-100 mb-3">
+          {% if request.user.is_authenticated and request.user.language == 'kk' %}Тіркелу{% else %}Зарегистрироваться{% endif %}
+        </button>
+      </form>
+
+      <div class="text-center">
+        <p style="color: var(--kt-text-light); font-size: 0.875rem; margin: 0;">
+          {% if request.user.is_authenticated and request.user.language == 'kk' %}
+            Аккаунтыңыз бар ма? <a href="{% url 'core:login' %}" style="color: var(--kt-accent); text-decoration: none; font-weight: 600;">Кіру</a>
+          {% else %}
+            Уже есть аккаунт? <a href="{% url 'core:login' %}" style="color: var(--kt-accent); text-decoration: none; font-weight: 600;">Войти</a>
+          {% endif %}
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .stripe-card input[type="text"],
+  .stripe-card input[type="password"],
+  .stripe-card select {
+    border-radius: 8px;
+    padding: 0.75rem;
+    border: 1px solid var(--kt-border);
+    width: 100%;
+  }
+</style>
+{% endblock %}
+<div class="row justify-content-center">
+  <div class="col-md-10 col-lg-8 col-xl-6">
+    <div class="card-modern p-5">
+      <div class="text-center mb-4">
+        <div class="mb-3">
+          <i class="bi bi-person-plus-fill" style="font-size: 3rem; background: var(--kt-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"></i>
+        </div>
+        {% if request.user.is_authenticated and request.user.language == 'kk' %}
+          <h1 class="h3 fw-bold mb-2">Жаңа аккаунт жасау</h1>
+          <p class="text-muted">Жүйеге қол жеткізу үшін форманы толтырыңыз</p>
+        {% else %}
+          <h1 class="h3 fw-bold mb-2">Создать аккаунт</h1>
+          <p class="text-muted">Заполните форму для регистрации в системе</p>
+        {% endif %}
+      </div>
+      
+      <form method="post">
+        {% csrf_token %}
+        
+        {% if form.non_field_errors %}
+          <div class="alert alert-danger d-flex align-items-center mb-4">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+            <div>{{ form.non_field_errors }}</div>
+          </div>
+        {% endif %}
+
+        <div class="row g-3">
+          <div class="col-md-6">
+              <label class="form-label fw-semibold">
+                <i class="bi bi-person me-1"></i>{% if request.user.is_authenticated and request.user.language == 'kk' %}Логин *{% else %}Логин *{% endif %}
+              </label>
+            <input 
+              type="text" 
+              name="username" 
+              class="form-control form-control-lg {% if form.username.errors %}is-invalid{% endif %}" 
+              placeholder="{% if request.user.is_authenticated and request.user.language == 'kk' %}Логинді енгізіңіз{% else %}Введите логин{% endif %}"
+              value="{{ form.username.value|default:'' }}"
+              required
+            >
+            {% if form.username.errors %}
+              <div class="invalid-feedback">{{ form.username.errors.0 }}</div>
+            {% endif %}
+          </div>
+          
+          <div class="col-md-6">
+              <label class="form-label fw-semibold">
+                <i class="bi bi-person-badge me-1"></i>{% if request.user.is_authenticated and request.user.language == 'kk' %}Аты-жөні{% else %}ФИО{% endif %}
+              </label>
+            <input 
+              type="text" 
+              name="full_name" 
+              class="form-control form-control-lg" 
+              placeholder="{% if request.user.is_authenticated and request.user.language == 'kk' %}Аты-жөнін енгізіңіз{% else %}Иванов Иван Иванович{% endif %}"
+              value="{{ form.full_name.value|default:'' }}"
+            >
+          </div>
+          
+          <div class="col-md-6">
+              <label class="form-label fw-semibold">
+                <i class="bi bi-telephone me-1"></i>{% if request.user.is_authenticated and request.user.language == 'kk' %}Телефон{% else %}Телефон{% endif %}
+              </label>
+            <input 
+              type="tel" 
+              name="phone" 
+              class="form-control form-control-lg" 
+              placeholder="{% if request.user.is_authenticated and request.user.language == 'kk' %}+7 (___) ___-__-__{% else %}+7 (___) ___-__-__{% endif %}"
+              value="{{ form.phone.value|default:'' }}"
+            >
+          </div>
+          
+          <div class="col-md-6">
+              <label class="form-label fw-semibold">
+                <i class="bi bi-translate me-1"></i>{% if request.user.is_authenticated and request.user.language == 'kk' %}Интерфейс тілі{% else %}Язык интерфейса{% endif %}
+              </label>
+            <select name="language" class="form-select form-select-lg">
+              <option value="ru" {% if form.language.value == 'ru' %}selected{% endif %}>🇷🇺 Русский</option>
+              <option value="kk" {% if form.language.value == 'kk' %}selected{% endif %}>🇰🇿 Қазақша</option>
+            </select>
+          </div>
+          
+          <div class="col-md-6">
+              <label class="form-label fw-semibold">
+                <i class="bi bi-lock me-1"></i>{% if request.user.is_authenticated and request.user.language == 'kk' %}Құпиясөз *{% else %}Пароль *{% endif %}
+              </label>
+            <input 
+              type="password" 
+              name="password1" 
+              class="form-control form-control-lg {% if form.password1.errors %}is-invalid{% endif %}" 
+              placeholder="{% if request.user.is_authenticated and request.user.language == 'kk' %}Кемінде 8 таңба{% else %}Минимум 8 символов{% endif %}"
+              required
+            >
+            {% if form.password1.errors %}
+              <div class="invalid-feedback">{{ form.password1.errors.0 }}</div>
+            {% endif %}
+          </div>
+          
+          <div class="col-md-6">
+              <label class="form-label fw-semibold">
+                <i class="bi bi-lock-fill me-1"></i>{% if request.user.is_authenticated and request.user.language == 'kk' %}Құпиясөзді қайталаңыз *{% else %}Повторите пароль *{% endif %}
+              </label>
+            <input 
+              type="password" 
+              name="password2" 
+              class="form-control form-control-lg {% if form.password2.errors %}is-invalid{% endif %}" 
+              placeholder="{% if request.user.is_authenticated and request.user.language == 'kk' %}Құпиясөзді қайталаңыз{% else %}Повторите пароль{% endif %}"
+              required
+            >
+            {% if form.password2.errors %}
+              <div class="invalid-feedback">{{ form.password2.errors.0 }}</div>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="alert alert-info mt-4 d-flex align-items-start">
+          <i class="bi bi-info-circle-fill me-2 mt-1"></i>
+          <div class="small">
+            {% if request.user.is_authenticated and request.user.language == 'kk' %}
+              <strong>Құпиясөз талаптары:</strong> кемінде 8 таңба, тым қарапайым болмауы керек
+            {% else %}
+              <strong>Требования к паролю:</strong> минимум 8 символов, не должен быть слишком простым
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="d-grid gap-2 mt-4">
+          <button type="submit" class="btn btn-gradient btn-lg">
+            <i class="bi bi-check-circle me-2"></i>{% if request.user.is_authenticated and request.user.language == 'kk' %}Аккаунт жасау{% else %}Создать аккаунт{% endif %}
+          </button>
+          <a href="{% url 'core:login' %}" class="btn btn-outline-secondary btn-lg">
+            <i class="bi bi-arrow-left me-2"></i>{% if request.user.is_authenticated and request.user.language == 'kk' %}Аккаунтыңыз бар ма{% else %}Уже есть аккаунт{% endif %}
+          </a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
