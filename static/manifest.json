@@ -1,0 +1,28 @@
+{
+  "name": "Centrium - Казахтелеком Support",
+  "short_name": "Centrium",
+  "description": "AI-powered helpdesk для Казахтелеком",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a2540",
+  "theme_color": "#00AEEF",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/static/images/logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/static/images/favicon.svg",
+      "sizes": "32x32",
+      "type": "image/svg+xml"
+    }
+  ],
+  "categories": ["business", "productivity", "utilities"],
+  "lang": "ru-RU",
+  "dir": "ltr",
+  "scope": "/",
+  "prefer_related_applications": false
+}

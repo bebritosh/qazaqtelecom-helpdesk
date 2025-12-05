@@ -1,0 +1,194 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<section class="stripe-section" style="padding-top: 3rem; padding-bottom: 3rem;">
+  <div class="container" style="max-width: 1200px;">
+    <div class="d-flex justify-content-between align-items-center mb-4 animate-fade-in-up">
+      <div>
+        {% if request.user.language == 'kk' %}
+          <h1 style="font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; letter-spacing: -0.02em;">Оператор панелі</h1>
+          <p style="color: var(--kt-text-light); margin: 0;">Барлық ашық және белсенді өтінімдердің тізімі</p>
+        {% else %}
+          <h1 style="font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; letter-spacing: -0.02em;">Панель оператора</h1>
+          <p style="color: var(--kt-text-light); margin: 0;">Список всех открытых и активных обращений</p>
+        {% endif %}
+      </div>
+      <div>
+        <span style="display: inline-block; padding: 0.5rem 1rem; background: linear-gradient(135deg, rgba(0,174,239,0.1), rgba(0,174,239,0.2)); border-radius: 8px; font-weight: 600; color: var(--kt-accent);">
+          <i class="bi bi-ticket-detailed me-2"></i>{{ tickets|length }} тикетов
+        </span>
+      </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="stripe-card mb-4 animate-fade-in-up" style="animation-delay: 0.1s; padding: 1.5rem;">
+      <div class="row g-3">
+        <div class="col-md-4">
+          <div class="input-group">
+            <span class="input-group-text" style="background: var(--kt-surface); border-color: var(--kt-border);">
+              <i class="bi bi-search"></i>
+            </span>
+            <input type="text" class="form-control" placeholder="{% if request.user.language == 'kk' %}Тақырып немесе ID бойынша іздеу...{% else %}Поиск по теме или ID...{% endif %}" style="border-color: var(--kt-border);">
+          </div>
+        </div>
+        <div class="col-md-2">
+          <select class="form-select" style="border-color: var(--kt-border);">
+            {% if request.user.language == 'kk' %}
+              <option selected>Барлық статустар</option>
+              <option>Жаңа</option>
+              <option>Жұмыста</option>
+              <option>Жабылған</option>
+            {% else %}
+              <option selected>Все статусы</option>
+              <option>Новые</option>
+              <option>В работе</option>
+              <option>Закрытые</option>
+            {% endif %}
+          </select>
+        </div>
+        <div class="col-md-2">
+          <select class="form-select" style="border-color: var(--kt-border);">
+            {% if request.user.language == 'kk' %}
+              <option selected>Барлық санаттар</option>
+              <option>Интернет</option>
+              <option>ТВ</option>
+              <option>Биллинг</option>
+            {% else %}
+              <option selected>Все категории</option>
+              <option>Интернет</option>
+              <option>ТВ</option>
+              <option>Биллинг</option>
+            {% endif %}
+          </select>
+        </div>
+        <div class="col-md-2">
+          <select class="form-select" style="border-color: var(--kt-border);">
+            {% if request.user.language == 'kk' %}
+              <option selected>Барлық басымдықтар</option>
+              <option>Жоғары</option>
+              <option>Орта</option>
+              <option>Төмен</option>
+            {% else %}
+              <option selected>Все приоритеты</option>
+              <option>Высокий</option>
+              <option>Средний</option>
+              <option>Низкий</option>
+            {% endif %}
+          </select>
+        </div>
+        <div class="col-md-2">
+          <button class="btn btn-outline-secondary w-100" style="border-color: var(--kt-border);">
+            <i class="bi bi-arrow-clockwise me-1"></i>{% if request.user.language == 'kk' %}Тазарту{% else %}Сбросить{% endif %}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="stripe-card animate-fade-in-up" style="animation-delay: 0.2s;">
+      <div class="table-responsive">
+        <table class="table mb-0 align-middle" style="border: none;">
+          <thead style="border-bottom: 2px solid var(--kt-border);">
+            <tr>
+              <th style="padding: 1rem; font-weight: 600; font-size: 0.875rem; color: var(--kt-text-light);">ID</th>
+              <th style="padding: 1rem; font-weight: 600; font-size: 0.875rem; color: var(--kt-text-light);">{% if request.user.language == 'kk' %}Тақырып{% else %}Тема{% endif %}</th>
+              <th style="padding: 1rem; font-weight: 600; font-size: 0.875rem; color: var(--kt-text-light);">{% if request.user.language == 'kk' %}Клиент{% else %}Клиент{% endif %}</th>
+              <th style="padding: 1rem; font-weight: 600; font-size: 0.875rem; color: var(--kt-text-light);">{% if request.user.language == 'kk' %}Арна{% else %}Канал{% endif %}</th>
+              <th style="padding: 1rem; font-weight: 600; font-size: 0.875rem; color: var(--kt-text-light);">{% if request.user.language == 'kk' %}Санат{% else %}Категория{% endif %}</th>
+              <th style="padding: 1rem; font-weight: 600; font-size: 0.875rem; color: var(--kt-text-light);">{% if request.user.language == 'kk' %}Басымдық{% else %}Приоритет{% endif %}</th>
+              <th style="padding: 1rem; font-weight: 600; font-size: 0.875rem; color: var(--kt-text-light);">{% if request.user.language == 'kk' %}Статус{% else %}Статус{% endif %}</th>
+              <th style="padding: 1rem;"></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for t in tickets %}
+            <tr style="border-bottom: 1px solid var(--kt-border);">
+              <td style="padding: 1rem; font-weight: 600; color: var(--kt-text);">#{{ t.id }}</td>
+              <td style="padding: 1rem;">
+                <div style="font-weight: 600; color: var(--kt-text);">
+                  {{ t.subject }}
+                  {% if t.escalated_at and not t.operator_joined %}
+                    <span class="badge bg-warning text-dark ms-2" style="font-size: 0.7rem; padding: 0.25rem 0.5rem;">
+                      <i class="bi bi-exclamation-triangle me-1"></i>{% if request.user.language == 'kk' %}Эскалация{% else %}Эскалация{% endif %}
+                    </span>
+                  {% endif %}
+                </div>
+                <div style="font-size: 0.875rem; color: var(--kt-text-light);">{{ t.created_at|date:"d.m.Y H:i" }}</div>
+              </td>
+              <td style="padding: 1rem; color: var(--kt-text);">{{ t.author.full_name|default:t.author.username }}</td>
+              <td style="padding: 1rem;">
+                {% if t.channel == 'web' %}
+                  <span style="display: inline-block; padding: 0.25rem 0.75rem; background-color: #e3f2fd; color: #1976d2; border-radius: 12px; font-size: 0.875rem; font-weight: 500;">
+                    <i class="bi bi-globe me-1"></i>Веб
+                  </span>
+                {% elif t.channel == 'email' %}
+                  <span style="display: inline-block; padding: 0.25rem 0.75rem; background-color: #fff3e0; color: #f57c00; border-radius: 12px; font-size: 0.875rem; font-weight: 500;">
+                    <i class="bi bi-envelope me-1"></i>Email
+                  </span>
+                {% elif t.channel == 'telegram' %}
+                  <span style="display: inline-block; padding: 0.25rem 0.75rem; background-color: #e1f5fe; color: #0288d1; border-radius: 12px; font-size: 0.875rem; font-weight: 500;">
+                    <i class="bi bi-telegram me-1"></i>Telegram
+                  </span>
+                {% elif t.channel == 'whatsapp' %}
+                  <span style="display: inline-block; padding: 0.25rem 0.75rem; background-color: #e8f5e9; color: #388e3c; border-radius: 12px; font-size: 0.875rem; font-weight: 500;">
+                    <i class="bi bi-whatsapp me-1"></i>WhatsApp
+                  </span>
+                {% elif t.channel == 'api' %}
+                  <span style="display: inline-block; padding: 0.25rem 0.75rem; background-color: #f3e5f5; color: #7b1fa2; border-radius: 12px; font-size: 0.875rem; font-weight: 500;">
+                    <i class="bi bi-code-slash me-1"></i>API
+                  </span>
+                {% else %}
+                  <span style="display: inline-block; padding: 0.25rem 0.75rem; background-color: var(--kt-surface); border-radius: 12px; font-size: 0.875rem; font-weight: 500;">
+                    {{ t.get_channel_display }}
+                  </span>
+                {% endif %}
+              </td>
+              <td style="padding: 1rem;">
+                <span style="display: inline-block; padding: 0.25rem 0.75rem; background-color: var(--kt-surface); border-radius: 12px; font-size: 0.875rem; font-weight: 500;">
+                  {{ t.get_category_display }}
+                </span>
+              </td>
+              <td style="padding: 1rem;">
+                <span style="display: inline-block; padding: 0.25rem 0.75rem; {% if t.priority == 'High' %}background-color: #fee; color: #c00;{% elif t.priority == 'Medium' %}background-color: #ffc; color: #860;{% else %}background-color: #efe; color: #060;{% endif %} border-radius: 12px; font-size: 0.875rem; font-weight: 500;">
+                  {{ t.get_priority_display }}
+                </span>
+              </td>
+              <td style="padding: 1rem;">
+                <span style="display: inline-block; padding: 0.25rem 0.75rem; {% if t.status == 'Open' %}background-color: #e3f2fd; color: #1976d2;{% elif t.status == 'In Progress' %}background-color: #fff3e0; color: #f57c00;{% else %}background-color: #e8f5e9; color: #388e3c;{% endif %} border-radius: 12px; font-size: 0.875rem; font-weight: 500;">
+                  {{ t.get_status_display }}
+                </span>
+              </td>
+              <td class="text-end" style="padding: 1rem;">
+                {% if t.escalated_at %}
+                  <a href="{% url 'tickets:operator_chat' t.id %}" class="stripe-btn-primary" style="padding: 0.5rem 1rem; font-size: 0.875rem; text-decoration: none; display: inline-block;">
+                    <i class="bi bi-chat-dots me-1"></i>{% if request.user.language == 'kk' %}Чатқа кіру{% else %}Войти в чат{% endif %}
+                  </a>
+                {% else %}
+                  <a href="{% url 'tickets:operator_ticket_detail' t.id %}" class="stripe-btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.875rem; text-decoration: none; display: inline-block;">
+                    {% if request.user.language == 'kk' %}Ашу{% else %}Открыть{% endif %}
+                  </a>
+                {% endif %}
+              </td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="7" class="text-center" style="padding: 3rem; color: var(--kt-text-light);">
+                {% if request.user.language == 'kk' %}
+                  Ашық өтінімдер жоқ. Демо деректерді құру үшін келесі команданы іске қосыңыз: <code>python manage.py create_demo_tickets</code>
+                {% else %}
+                  Нет открытых заявок. Создайте демо-данные командой: <code>python manage.py create_demo_tickets</code>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+{% load static %}
+<script src="{% static 'js/operator-search.js' %}"></script>
+{% endblock %}

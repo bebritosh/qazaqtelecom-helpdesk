@@ -1,0 +1,250 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="stripe-section" style="padding-top: 3rem; padding-bottom: 3rem;">
+  <div class="container" style="max-width: 900px;">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'core:index' %}">Главная</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'knowledge:list' %}">База знаний</a></li>
+        <li class="breadcrumb-item active">{{ article.title }}</li>
+      </ol>
+    </nav>
+
+    <!-- Article Header -->
+    <div class="stripe-card mb-4 animate-fade-in-up">
+      <div class="d-flex justify-content-between align-items-start mb-3">
+        <h1 style="font-size: 2rem; font-weight: 700; margin: 0;">{{ article.title }}</h1>
+        <span class="badge" style="background-color: rgba(0,174,239,0.1); color: var(--kt-accent); font-weight: 500; font-size: 0.875rem;">
+          {{ article.get_category_display }}
+        </span>
+      </div>
+
+      <div class="d-flex gap-3 align-items-center mb-3" style="font-size: 0.875rem; color: var(--kt-text-light);">
+        <span><i class="bi bi-eye me-1"></i>{{ article.views_count }} просмотров</span>
+        <span><i class="bi bi-hand-thumbs-up me-1"></i>{{ article.helpful_count }} полезно</span>
+        <span><i class="bi bi-calendar me-1"></i>{{ article.published_at|date:"d.m.Y" }}</span>
+        {% if article.author %}
+          <span><i class="bi bi-person me-1"></i>{{ article.author.full_name|default:article.author.username }}</span>
+        {% endif %}
+      </div>
+
+      {% if article.get_tags_list %}
+        <div class="d-flex gap-2 flex-wrap">
+          {% for tag in article.get_tags_list %}
+            <span class="badge bg-secondary">{{ tag }}</span>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Article Content -->
+    <div class="stripe-card mb-4 animate-fade-in-up" style="animation-delay: 0.1s;">
+      <div id="article-content" class="markdown-content">
+        {{ article.content|safe }}
+      </div>
+    </div>
+
+    <!-- Rating -->
+    <div class="stripe-card mb-4 animate-fade-in-up" style="animation-delay: 0.2s;">
+      <h4 style="font-size: 1.125rem; font-weight: 600; margin-bottom: 1rem;">Была ли эта статья полезной?</h4>
+      <div class="d-flex gap-3">
+        <button class="btn btn-outline-success" id="btn-helpful" onclick="rateArticle({{ article.id }}, true)">
+          <i class="bi bi-hand-thumbs-up me-2"></i>Да, помогло
+        </button>
+        <button class="btn btn-outline-danger" id="btn-not-helpful" onclick="rateArticle({{ article.id }}, false)">
+          <i class="bi bi-hand-thumbs-down me-2"></i>Нет, не помогло
+        </button>
+      </div>
+      <div id="rating-feedback" class="mt-3" style="display: none;">
+        <div class="alert alert-success">
+          <i class="bi bi-check-circle me-2"></i>Спасибо за вашу оценку!
+        </div>
+      </div>
+    </div>
+
+    <!-- Similar Articles -->
+    {% if similar_articles %}
+      <div class="stripe-card animate-fade-in-up" style="animation-delay: 0.3s;">
+        <h4 style="font-size: 1.125rem; font-weight: 600; margin-bottom: 1rem;">Похожие статьи</h4>
+        <div class="row g-3">
+          {% for similar in similar_articles %}
+            <div class="col-md-6">
+              <a href="{% url 'knowledge:detail' similar.slug %}" style="text-decoration: none; color: inherit; display: block; padding: 1rem; border: 1px solid var(--kt-border); border-radius: 8px; transition: all 0.2s;" onmouseover="this.style.borderColor='var(--kt-accent)'; this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='var(--kt-border)'; this.style.transform='translateY(0)'">
+                <h5 style="font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem;">{{ similar.title }}</h5>
+                <p style="font-size: 0.875rem; color: var(--kt-text-light); margin: 0;">
+                  {{ similar.summary|truncatewords:15 }}
+                </p>
+              </a>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+<style>
+  /* Markdown Content Styles */
+  .markdown-content {
+    line-height: 1.8;
+    color: var(--kt-text);
+  }
+
+  .markdown-content h1,
+  .markdown-content h2,
+  .markdown-content h3,
+  .markdown-content h4 {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+    color: var(--kt-text);
+  }
+
+  .markdown-content h1 { font-size: 2rem; }
+  .markdown-content h2 { font-size: 1.5rem; border-bottom: 2px solid var(--kt-border); padding-bottom: 0.5rem; }
+  .markdown-content h3 { font-size: 1.25rem; }
+  .markdown-content h4 { font-size: 1.125rem; }
+
+  .markdown-content p {
+    margin-bottom: 1rem;
+  }
+
+  .markdown-content ul,
+  .markdown-content ol {
+    margin-bottom: 1rem;
+    padding-left: 2rem;
+  }
+
+  .markdown-content li {
+    margin-bottom: 0.5rem;
+  }
+
+  .markdown-content code {
+    background-color: var(--kt-surface);
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9em;
+    color: #e83e8c;
+  }
+
+  .markdown-content pre {
+    background-color: var(--kt-surface);
+    padding: 1rem;
+    border-radius: 8px;
+    overflow-x: auto;
+    margin-bottom: 1rem;
+  }
+
+  .markdown-content pre code {
+    background: none;
+    padding: 0;
+    color: var(--kt-text);
+  }
+
+  .markdown-content blockquote {
+    border-left: 4px solid var(--kt-accent);
+    padding-left: 1rem;
+    margin: 1rem 0;
+    color: var(--kt-text-light);
+    font-style: italic;
+  }
+
+  .markdown-content a {
+    color: var(--kt-accent);
+    text-decoration: none;
+  }
+
+  .markdown-content a:hover {
+    text-decoration: underline;
+  }
+
+  .markdown-content img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin: 1rem 0;
+  }
+
+  .markdown-content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+  }
+
+  .markdown-content th,
+  .markdown-content td {
+    border: 1px solid var(--kt-border);
+    padding: 0.75rem;
+    text-align: left;
+  }
+
+  .markdown-content th {
+    background-color: var(--kt-surface);
+    font-weight: 600;
+  }
+</style>
+
+<script>
+  // Простой Markdown парсер
+  function parseMarkdown(text) {
+    // Заголовки
+    text = text.replace(/^### (.*$)/gim, '<h3>$1</h3>');
+    text = text.replace(/^## (.*$)/gim, '<h2>$1</h2>');
+    text = text.replace(/^# (.*$)/gim, '<h1>$1</h1>');
+    
+    // Жирный текст
+    text = text.replace(/\*\*(.*?)\*\*/gim, '<strong>$1</strong>');
+    
+    // Курсив
+    text = text.replace(/\*(.*?)\*/gim, '<em>$1</em>');
+    
+    // Списки
+    text = text.replace(/^\* (.*$)/gim, '<li>$1</li>');
+    text = text.replace(/^\d+\. (.*$)/gim, '<li>$1</li>');
+    
+    // Код
+    text = text.replace(/`([^`]+)`/gim, '<code>$1</code>');
+    
+    // Параграфы
+    text = text.replace(/\n\n/g, '</p><p>');
+    text = '<p>' + text + '</p>';
+    
+    return text;
+  }
+
+  // Применяем парсинг при загрузке
+  document.addEventListener('DOMContentLoaded', function() {
+    const content = document.getElementById('article-content');
+    if (content && content.textContent.trim()) {
+      content.innerHTML = parseMarkdown(content.textContent);
+    }
+  });
+
+  // Оценка статьи
+  function rateArticle(articleId, isHelpful) {
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value || '';
+    
+    fetch(`/knowledge/api/rate/${articleId}/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': csrfToken
+      },
+      body: JSON.stringify({ is_helpful: isHelpful })
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) {
+        document.getElementById('btn-helpful').disabled = true;
+        document.getElementById('btn-not-helpful').disabled = true;
+        document.getElementById('rating-feedback').style.display = 'block';
+      }
+    })
+    .catch(err => console.error('Rating error:', err));
+  }
+</script>
+{% endblock %}

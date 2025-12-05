@@ -1,0 +1,258 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="stripe-section" style="padding-top: 3rem; padding-bottom: 3rem;">
+  <div class="container" style="max-width: 1400px;">
+    <div class="mb-4">
+      <h1 style="font-size: 2rem; font-weight: 700;">
+        {% if article.id %}Редактирование статьи{% else %}Новая статья{% endif %}
+      </h1>
+    </div>
+
+    <form method="post" action="">
+      {% csrf_token %}
+      
+      <div class="row g-4">
+        <!-- Editor -->
+        <div class="col-lg-6">
+          <div class="stripe-card">
+            <h3 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 1.5rem;">
+              Редактор (Markdown)
+            </h3>
+
+            <div class="mb-3">
+              <label class="form-label" style="font-weight: 600;">Заголовок</label>
+              <input type="text" name="title" class="form-control" value="{{ article.title }}" required style="border-color: var(--kt-border);">
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label" style="font-weight: 600;">Краткое описание</label>
+              <textarea name="summary" class="form-control" rows="2" required style="border-color: var(--kt-border);">{{ article.summary }}</textarea>
+              <small class="text-muted">Отображается в списке статей</small>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label" style="font-weight: 600;">Содержание (Markdown)</label>
+              <textarea id="markdown-editor" name="content" class="form-control" rows="20" required style="border-color: var(--kt-border); font-family: 'Courier New', monospace;">{{ article.content }}</textarea>
+              <small class="text-muted">
+                Поддерживается Markdown: # заголовки, **жирный**, *курсив*, `код`, списки
+              </small>
+            </div>
+
+            <div class="row g-3 mb-3">
+              <div class="col-md-6">
+                <label class="form-label" style="font-weight: 600;">Категория</label>
+                <select name="category" class="form-select" style="border-color: var(--kt-border);">
+                  {% for cat_value, cat_name in categories %}
+                    <option value="{{ cat_value }}" {% if article.category == cat_value %}selected{% endif %}>{{ cat_name }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label" style="font-weight: 600;">Статус</label>
+                <select name="status" class="form-select" style="border-color: var(--kt-border);">
+                  {% for status_value, status_name in statuses %}
+                    <option value="{{ status_value }}" {% if article.status == status_value %}selected{% endif %}>{{ status_name }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label" style="font-weight: 600;">Теги</label>
+              <input type="text" name="tags" class="form-control" value="{{ article.tags }}" placeholder="роутер, интернет, настройка" style="border-color: var(--kt-border);">
+              <small class="text-muted">Через запятую</small>
+            </div>
+
+            <div class="d-flex gap-2">
+              <button type="submit" class="stripe-btn-primary">
+                <i class="bi bi-save me-2"></i>Сохранить
+              </button>
+              <a href="{% url 'knowledge:list' %}" class="stripe-btn-secondary">
+                Отмена
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Preview -->
+        <div class="col-lg-6">
+          <div class="stripe-card" style="position: sticky; top: 2rem;">
+            <h3 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 1.5rem;">
+              Предпросмотр
+            </h3>
+            <div id="preview" class="markdown-content" style="min-height: 400px; padding: 1rem; background: var(--kt-surface); border-radius: 8px;">
+              <p style="color: var(--kt-text-light);">Начните печатать, чтобы увидеть предпросмотр...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</section>
+
+<style>
+  /* Markdown Content Styles (same as detail.html) */
+  .markdown-content {
+    line-height: 1.8;
+    color: var(--kt-text);
+  }
+
+  .markdown-content h1,
+  .markdown-content h2,
+  .markdown-content h3,
+  .markdown-content h4 {
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+    color: var(--kt-text);
+  }
+
+  .markdown-content h1 { font-size: 2rem; }
+  .markdown-content h2 { font-size: 1.5rem; border-bottom: 2px solid var(--kt-border); padding-bottom: 0.5rem; }
+  .markdown-content h3 { font-size: 1.25rem; }
+  .markdown-content h4 { font-size: 1.125rem; }
+
+  .markdown-content p {
+    margin-bottom: 1rem;
+  }
+
+  .markdown-content ul,
+  .markdown-content ol {
+    margin-bottom: 1rem;
+    padding-left: 2rem;
+  }
+
+  .markdown-content li {
+    margin-bottom: 0.5rem;
+  }
+
+  .markdown-content code {
+    background-color: rgba(0,0,0,0.05);
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9em;
+    color: #e83e8c;
+  }
+
+  .markdown-content pre {
+    background-color: rgba(0,0,0,0.05);
+    padding: 1rem;
+    border-radius: 8px;
+    overflow-x: auto;
+    margin-bottom: 1rem;
+  }
+
+  .markdown-content pre code {
+    background: none;
+    padding: 0;
+    color: var(--kt-text);
+  }
+
+  .markdown-content blockquote {
+    border-left: 4px solid var(--kt-accent);
+    padding-left: 1rem;
+    margin: 1rem 0;
+    color: var(--kt-text-light);
+    font-style: italic;
+  }
+</style>
+
+<script>
+  // Markdown парсер
+  function parseMarkdown(text) {
+    // Заголовки
+    text = text.replace(/^#### (.*$)/gim, '<h4>$1</h4>');
+    text = text.replace(/^### (.*$)/gim, '<h3>$1</h3>');
+    text = text.replace(/^## (.*$)/gim, '<h2>$1</h2>');
+    text = text.replace(/^# (.*$)/gim, '<h1>$1</h1>');
+    
+    // Жирный текст
+    text = text.replace(/\*\*(.*?)\*\*/gim, '<strong>$1</strong>');
+    
+    // Курсив
+    text = text.replace(/\*(.*?)\*/gim, '<em>$1</em>');
+    
+    // Код блоки
+    text = text.replace(/```([\s\S]*?)```/gim, '<pre><code>$1</code></pre>');
+    
+    // Inline код
+    text = text.replace(/`([^`]+)`/gim, '<code>$1</code>');
+    
+    // Списки (упрощённая версия)
+    text = text.replace(/^\* (.*$)/gim, '<li>$1</li>');
+    text = text.replace(/^\d+\. (.*$)/gim, '<li>$1</li>');
+    text = text.replace(/(<li>.*<\/li>)/gim, '<ul>$1</ul>');
+    
+    // Цитаты
+    text = text.replace(/^> (.*$)/gim, '<blockquote>$1</blockquote>');
+    
+    // Параграфы
+    text = text.split('\n\n').map(para => {
+      if (!para.match(/^<[h1-6|ul|ol|pre|blockquote]/)) {
+        return '<p>' + para + '</p>';
+      }
+      return para;
+    }).join('\n');
+    
+    return text;
+  }
+
+  // Live preview
+  const editor = document.getElementById('markdown-editor');
+  const preview = document.getElementById('preview');
+
+  function updatePreview() {
+    const markdown = editor.value;
+    if (markdown.trim()) {
+      preview.innerHTML = parseMarkdown(markdown);
+    } else {
+      preview.innerHTML = '<p style="color: var(--kt-text-light);">Начните печатать, чтобы увидеть предпросмотр...</p>';
+    }
+  }
+
+  editor.addEventListener('input', updatePreview);
+
+  // Initial preview
+  updatePreview();
+
+  // Keyboard shortcuts
+  editor.addEventListener('keydown', function(e) {
+    // Ctrl/Cmd + B = Bold
+    if ((e.ctrlKey || e.metaKey) && e.key === 'b') {
+      e.preventDefault();
+      insertMarkdown('**', '**');
+    }
+    
+    // Ctrl/Cmd + I = Italic
+    if ((e.ctrlKey || e.metaKey) && e.key === 'i') {
+      e.preventDefault();
+      insertMarkdown('*', '*');
+    }
+    
+    // Ctrl/Cmd + K = Code
+    if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+      e.preventDefault();
+      insertMarkdown('`', '`');
+    }
+  });
+
+  function insertMarkdown(before, after) {
+    const start = editor.selectionStart;
+    const end = editor.selectionEnd;
+    const text = editor.value;
+    const selectedText = text.substring(start, end);
+    
+    const newText = text.substring(0, start) + before + selectedText + after + text.substring(end);
+    editor.value = newText;
+    
+    editor.selectionStart = start + before.length;
+    editor.selectionEnd = end + before.length;
+    editor.focus();
+    
+    updatePreview();
+  }
+</script>
+{% endblock %}

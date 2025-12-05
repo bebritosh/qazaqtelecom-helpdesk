@@ -1,0 +1,90 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<section class="stripe-section" style="padding-top: 3rem; padding-bottom: 3rem;">
+  <div class="chat-container">
+    <div class="mb-4 text-center animate-fade-in-up">
+      {% if request.user.is_authenticated and request.user.language == 'kk' %}
+        <h1 style="font-size: 2.5rem; font-weight: 700; margin-bottom: 0.75rem; letter-spacing: -0.02em;">Қолдау чаты</h1>
+        <p style="font-size: 1.125rem; color: var(--kt-text-light); max-width: 600px; margin: 0 auto;">
+          Мәселені мәтінмен, дауыспен немесе фото арқылы сипаттаңыз. AI-көмекші жылдам жауап береді.
+        </p>
+      {% else %}
+        <h1 style="font-size: 2.5rem; font-weight: 700; margin-bottom: 0.75rem; letter-spacing: -0.02em;">Чат с поддержкой</h1>
+        <p style="font-size: 1.125rem; color: var(--kt-text-light); max-width: 600px; margin: 0 auto;">
+          Опишите проблему текстом, голосом или прикрепите фото. AI-ассистент ответит мгновенно.
+        </p>
+      {% endif %}
+    </div>
+
+    <div class="chat-messages mb-3 animate-fade-in" id="chat-messages" aria-live="polite" style="animation-delay: 0.2s;"></div>
+
+    <!-- Быстрые ответы -->
+    <div id="quick-replies" class="mb-3 animate-fade-in" style="animation-delay: 0.25s; display: none;">
+      <div class="d-flex flex-wrap gap-2 justify-content-center">
+        <button type="button" class="btn btn-outline-primary quick-reply-btn" data-text="Не работает интернет">
+          <i class="bi bi-wifi-off me-1"></i>
+          {% if request.user.is_authenticated and request.user.language == 'kk' %}Интернет жұмыс істемейді{% else %}Не работает интернет{% endif %}
+        </button>
+        <button type="button" class="btn btn-outline-primary quick-reply-btn" data-text="Проблема с телевидением">
+          <i class="bi bi-tv me-1"></i>
+          {% if request.user.is_authenticated and request.user.language == 'kk' %}ТВ мәселесі{% else %}Проблема с ТВ{% endif %}
+        </button>
+        <button type="button" class="btn btn-outline-primary quick-reply-btn" data-text="Вопрос по счету">
+          <i class="bi bi-receipt me-1"></i>
+          {% if request.user.is_authenticated and request.user.language == 'kk' %}Шот бойынша сұрақ{% else %}Вопрос по счету{% endif %}
+        </button>
+        <button type="button" class="btn btn-outline-primary quick-reply-btn" data-text="Медленная скорость">
+          <i class="bi bi-speedometer2 me-1"></i>
+          {% if request.user.is_authenticated and request.user.language == 'kk' %}Баяу жылдамдық{% else %}Медленная скорость{% endif %}
+        </button>
+        <button type="button" class="btn btn-outline-primary quick-reply-btn" data-text="Настройка роутера">
+          <i class="bi bi-router me-1"></i>
+          {% if request.user.is_authenticated and request.user.language == 'kk' %}Роутерді баптау{% else %}Настройка роутера{% endif %}
+        </button>
+      </div>
+    </div>
+
+    <form id="chat-form" class="stripe-card animate-fade-in-up" method="post" style="animation-delay: 0.3s;">
+      {% csrf_token %}
+      <div id="file-preview" class="mb-3" style="display: none;"></div>
+      <div class="row g-3 align-items-end">
+        <div class="col">
+          <label for="chat-input" class="visually-hidden">
+            {% if request.user.is_authenticated and request.user.language == 'kk' %}
+              Хабарлама
+            {% else %}
+              Сообщение
+            {% endif %}
+          </label>
+          <textarea 
+            id="chat-input" 
+            class="form-control" 
+            rows="2" 
+            placeholder="{% if request.user.is_authenticated and request.user.language == 'kk' %}Мәселені сипаттаңыз...{% else %}Опишите вашу проблему...{% endif %}" 
+            style="resize: none; border: 1px solid var(--kt-border); border-radius: 8px; padding: 0.75rem; font-size: 0.9375rem;"
+          ></textarea>
+        </div>
+        <div class="col-auto">
+          <div class="d-flex gap-2">
+            <button type="button" class="btn btn-outline-secondary" id="btn-voice" title="{% if request.user.is_authenticated and request.user.language == 'kk' %}Дауыс арқылы енгізу{% else %}Голосовой ввод{% endif %}" style="border-radius: 8px;">
+              <i class="bi bi-mic"></i>
+            </button>
+            <label class="btn btn-outline-secondary mb-0" for="file-input" title="Прикрепить изображение" style="border-radius: 8px;">
+              <i class="bi bi-paperclip"></i>
+            </label>
+            <input type="file" id="file-input" accept="image/*" class="d-none">
+            <button type="submit" class="stripe-btn-primary">
+              {% if request.user.is_authenticated and request.user.language == 'kk' %}
+                Жіберу
+              {% else %}
+                Отправить
+              {% endif %}
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,23 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Фон -->
+  <rect width="512" height="512" rx="80" fill="url(#gradient)"/>
+  
+  <!-- Градиент -->
+  <defs>
+    <linearGradient id="gradient" x1="0" y1="0" x2="512" y2="512" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0a2540"/>
+      <stop offset="100%" stop-color="#00355E"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Символ "C" для Centrium -->
+  <path d="M 256 120 A 136 136 0 1 1 256 392" stroke="#00AEEF" stroke-width="40" fill="none" stroke-linecap="round"/>
+  
+  <!-- Точка в центре -->
+  <circle cx="256" cy="256" r="20" fill="#00AEEF"/>
+  
+  <!-- Волны (символ связи) -->
+  <path d="M 320 200 Q 360 230 320 260" stroke="#00AEEF" stroke-width="8" fill="none" opacity="0.6"/>
+  <path d="M 350 180 Q 400 230 350 280" stroke="#00AEEF" stroke-width="8" fill="none" opacity="0.4"/>
+  <path d="M 380 160 Q 440 230 380 300" stroke="#00AEEF" stroke-width="8" fill="none" opacity="0.2"/>
+</svg>
